@@ -22,7 +22,7 @@ import rx.Observable;
 public interface WeatherService {
 
 
-    //@GET("data/2.5/forecast?lat=48.7817798&lon=2.215113&units=metric&lang=fr&appid=69d3ebaf41c279fdab03729bcfa7da53")
+    //@GET("http://api.openweathermap.org/data/2.5/forecast?lat=48.7817798&lon=2.215113&units=metric&lang=fr&appid=69d3ebaf41c279fdab03729bcfa7da53")
     @GET("data/2.5/forecast")
     //@FormUrlEncoded
     Observable<Forecast> getWeather(@Query("lat") String lat
