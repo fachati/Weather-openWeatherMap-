@@ -1,6 +1,5 @@
 package allunitconverter.fachati.com.weather;
 
-import android.app.Application;
 import android.content.Context;
 
 
@@ -13,7 +12,7 @@ import rx.schedulers.Schedulers;
  * Created by fachati on 23/03/17.
  */
 
-public class WeatherApplication extends Application {
+public class WeatherApplication extends android.app.Application {
 
     private WeatherService service;
     private Scheduler defaultSubscribeScheduler;
