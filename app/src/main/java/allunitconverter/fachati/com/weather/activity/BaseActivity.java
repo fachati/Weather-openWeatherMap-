@@ -9,6 +9,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -23,14 +24,13 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
+import allunitconverter.fachati.com.weather.R;
 import allunitconverter.fachati.com.weather.WeatherApplication;
 import allunitconverter.fachati.com.weather.WeatherService.WeatherService;
 import allunitconverter.fachati.com.weather.models.Forecast;
-import allunitconverter.fachati.com.weather.models.Weather;
+import allunitconverter.fachati.com.weather.models.ForecastDay;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -41,12 +41,10 @@ import rx.android.schedulers.AndroidSchedulers;
 
 public class BaseActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
-    private static final String APP_ID = "80e4eede56844462ef3cdc721208c31f";
 
     private static final int PERMISSION_ACCESS_COARSE_LOCATION = 1;
     private GoogleApiClient googleApiClient;
-    private LatLng myLocation;
-    private Subscription subscription;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +52,7 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.C
 
         getSupportActionBar().hide();
         hideStatusBar();
+
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -78,6 +77,8 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.C
             double lat = location.getLatitude();
             double lng = location.getLongitude();
             latLng = new LatLng(lat,lng);
+            //loadWeatherHour(lat+"",lng+"");
+            //loadWeatherDay(lat+"",lng+"");
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -96,6 +97,12 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.C
 
                 break;
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        hideStatusBar();
     }
 
     @Override
@@ -119,11 +126,20 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.C
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
             Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
-            myLocation=new LatLng(lastLocation.getLatitude(),lastLocation.getLongitude());
+            final Intent intent=new Intent(this, WeatherActivity.class);
             double lat = lastLocation.getLatitude(), lon = lastLocation.getLongitude();
-            loadInformations(lat+"",lon+"");
-            Log.e("text",lat+" - "+lon);
+            intent.putExtra("latitude",lat+"");
+            intent.putExtra("longitude",lon+"");
+            if(getActivityName().compareTo("WeatherActivity")!=0){
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        startActivity(intent);
+                        finish();
+                    }
+                }, 4000);
 
+            }
         }
     }
 
@@ -148,35 +164,6 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.C
         }
     }
 
-    public void loadInformations(String lat,String lon) {
-
-
-
-        WeatherApplication application = WeatherApplication.get(this);
-        WeatherService weatherService = application.getService();
-        subscription = weatherService.getWeather(lat,lon,"val1","fr","69d3ebaf41c279fdab03729bcfa7da53")//params)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(application.defaultSubscribeScheduler())
-                .subscribe(new Subscriber<Forecast>() {
-                    @Override
-                    public void onCompleted() {
-                        if(getActivityName().compareTo("WeatherActivity")!=0)
-                            startActivity(new Intent(BaseActivity.this, WeatherActivity.class));
-                    }
-
-                    @Override
-                    public void onError(Throwable error) {
-                        Log.e("tag",error.toString());
-                    }
-
-                    @Override
-                    public void onNext(Forecast forecast) {
-                        Log.e("tag","complet"+forecast.getCity().getName());
-
-                    }
-                });
-    }
-
     public String getActivityName(){
         ActivityManager am = (ActivityManager)getSystemService(ACTIVITY_SERVICE);
         List< ActivityManager.RunningTaskInfo > taskInfo = am.getRunningTasks(1);
@@ -184,9 +171,5 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.C
                 .substring(taskInfo.get(0).topActivity.getClassName().lastIndexOf(".")+1,taskInfo.get(0).topActivity.getClassName().length());
         return currentActivity;
     }
-
-
-
-
 
 }

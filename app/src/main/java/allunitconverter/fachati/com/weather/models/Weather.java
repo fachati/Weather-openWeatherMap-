@@ -78,4 +78,14 @@ public class Weather implements Parcelable {
             return new Weather[size];
         }
     };
+
+    @Override
+    public String toString() {
+        return "Weather{" +
+                "id=" + id +
+                ", description='" + description + '\'' +
+                ", icon='" + icon + '\'' +
+                ", main='" + main + '\'' +
+                '}';
+    }
 }

@@ -10,43 +10,19 @@ import java.util.ArrayList;
 /**
  * Created by fachati on 23/03/17.
  */
-public class List implements Parcelable {
+public class ListDay implements Parcelable {
 
     @SerializedName("dt")
     private int mDt;
 
-    @SerializedName("dt_txt")
-    private String dt;
 
-    private Main main;
+    @SerializedName("temp")
+    private MainDay main;
 
     @SerializedName("weather")
     private ArrayList<Weather> weathers;
 
 
-
-    private Wind wind;
-
-
-
-    private Snow snow;
-
-    public Snow getSnow() {
-        return snow;
-    }
-
-    public void setSnow(Snow snow) {
-        this.snow = snow;
-    }
-
-
-    public Wind getWind() {
-        return wind;
-    }
-
-    public void setWind(Wind wind) {
-        this.wind = wind;
-    }
 
 
 
@@ -58,21 +34,15 @@ public class List implements Parcelable {
         weathers = weather;
     }
 
-    public Main getMain() {
+    public MainDay getMain() {
         return main;
     }
 
-    public void setMain(Main main) {
+    public void setMain(MainDay main) {
         this.main = main;
     }
 
-    public String getDtText() {
-        return dt;
-    }
 
-    public void setDtText(String dtText) {
-        dt = dtText;
-    }
 
     public int getDt() {
         return mDt;
@@ -90,35 +60,38 @@ public class List implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.mDt);
-        dest.writeString(this.dt);
         dest.writeParcelable(this.main, flags);
         dest.writeList(this.weathers);
-        dest.writeParcelable(this.wind, flags);
-        dest.writeParcelable(this.snow, flags);
     }
 
-    public List() {
+    public ListDay() {
     }
 
-    private List(Parcel in) {
+    private ListDay(Parcel in) {
         this.mDt = in.readInt();
-        this.dt = in.readString();
         this.main = in.readParcelable(Main.class.getClassLoader());
         this.weathers = new ArrayList<>();
         in.readList(this.weathers, Weather.class.getClassLoader());
-        this.wind = in.readParcelable(Wind.class.getClassLoader());
-        this.snow = in.readParcelable(Snow.class.getClassLoader());
     }
 
-    public static final Creator<List> CREATOR = new Creator<List>() {
+    public static final Creator<ListDay> CREATOR = new Creator<ListDay>() {
         @Override
-        public List createFromParcel(Parcel source) {
-            return new List(source);
+        public ListDay createFromParcel(Parcel source) {
+            return new ListDay(source);
         }
 
         @Override
-        public List[] newArray(int size) {
-            return new List[size];
+        public ListDay[] newArray(int size) {
+            return new ListDay[size];
         }
     };
+
+    @Override
+    public String toString() {
+        return "ListDay{" +
+                "mDt=" + mDt +
+                ", main=" + main +
+                ", weathers=" + weathers +
+                '}';
+    }
 }

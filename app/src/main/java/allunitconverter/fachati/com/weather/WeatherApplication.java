@@ -1,9 +1,6 @@
 package allunitconverter.fachati.com.weather;
 
 import android.content.Context;
-
-
-
 import allunitconverter.fachati.com.weather.WeatherService.WeatherService;
 import rx.Scheduler;
 import rx.schedulers.Schedulers;

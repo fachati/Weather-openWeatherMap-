@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Weather</string>
+
+    <string name="APP_ID">80e4eede56844462ef3cdc721208c31f</string>
+    <string name="unit">metric</string>
+
 </resources>

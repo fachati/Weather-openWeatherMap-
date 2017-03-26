@@ -124,4 +124,17 @@ public class Main implements Parcelable {
             return new Main[size];
         }
     };
+
+    @Override
+    public String toString() {
+        return "Main{" +
+                "temp=" + temp +
+                ", humidity=" + humidity +
+                ", tempMin=" + tempMin +
+                ", tempMax=" + tempMax +
+                ", saeLevel=" + saeLevel +
+                ", grndLevel=" + grndLevel +
+                ", pressure=" + pressure +
+                '}';
+    }
 }

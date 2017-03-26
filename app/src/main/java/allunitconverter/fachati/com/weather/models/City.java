@@ -13,9 +13,7 @@ public class City implements Parcelable{
     private String country;
     private int population;
 
-    public City(){
 
-    }
 
     protected City(Parcel in) {
         name = in.readString();
@@ -72,11 +70,5 @@ public class City implements Parcelable{
         return name;
     }
 
-    public String getCountry() {
-        return country;
-    }
 
-    public int getPopulation() {
-        return population;
-    }
 }
